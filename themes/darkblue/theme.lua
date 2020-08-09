@@ -7,9 +7,9 @@ local os, math, string = os, math, string
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/darkblue"
 theme.wallpaper                                 = theme.dir .. "/wallpapers/wall_0.png"
-theme.font                                      = "Meslo LGS Regular 10"
-theme.taglist_font                              = "Meslo LGS Bold 10"
-theme.tasklist_font                             = "Terminus 10"
+theme.font                                      = "Meslo LG S Regular 10"
+theme.taglist_font                              = "Meslo LG S Bold 10"
+theme.tasklist_font                             = "Meslo LG S Bold 10"
 
 theme.bg_normal                                 = "#32302f"
 theme.fg_normal                                 = "#a89984"
@@ -31,12 +31,12 @@ theme.taglist_fg_urgent                         = "#282828"
 
 theme.tasklist_bg_normal                        = "#32302f"
 theme.tasklist_fg_normal                        = "#ebdbb2"
-theme.tasklist_bg_focus                         = "#32302f"
+theme.tasklist_bg_focus                         = "#4e9699"
 theme.tasklist_fg_focus                         = "#ebdbb2"
 theme.tasklist_bg_urgent                        = "#C92132"
 theme.tasklist_fg_urgent                        = "#32302f"
 
-theme.border_width                              = 0
+theme.border_width                              = 5
 theme.border_normal                             = "#32302f"
 theme.border_focus                              = "#3f3f3f"
 theme.border_marked                             = "#CC9393"
@@ -159,7 +159,7 @@ theme.black          = theme.bg_normal
 local markup = lain.util.markup
 
 theme.w1 = theme.dir .. "/icons/display/1.png"
-theme.w2 = theme.dir .. "/icons/display/2.png"
+theme.w2_ = theme.dir .. "/icons/display/2.png"
 theme.w3 = theme.dir .. "/icons/display/3.png"
 theme.w4 = theme.dir .. "/icons/display/4.png"
 theme.w5 = theme.dir .. "/icons/display/5.png"
@@ -177,7 +177,7 @@ theme.w16 = theme.dir .. "/icons/display/16.png"
 theme.w17 = theme.dir .. "/icons/display/17.png"
 
 w1 = wibox.widget.imagebox(theme.w1)
-w2 = wibox.widget.imagebox(theme.w2)
+theme.w2 = wibox.widget.imagebox(theme.w2_)
 w3 = wibox.widget.imagebox(theme.w3)
 w4 = wibox.widget.imagebox(theme.w4)
 w5 = wibox.widget.imagebox(theme.w5)
@@ -196,11 +196,11 @@ w17 = wibox.widget.imagebox(theme.w17)
 
 -- Widgets
 local clock_icon = wibox.widget.imagebox(theme.widget_clock)
-local clock = awful.widget.textclock("<span font=\"Meslo LGS Regular 10\" color=\"#32302f\"> %a %d %b  %H:%M </span>")
+local clock = awful.widget.textclock("%a %d %b  %H:%M")
 local clock_widget = wibox.container.background(wibox.container.margin(wibox.widget {clock_icon, clock, layout = wibox.layout.align.horizontal }, 0, 1), theme.violet)
 
 -- Calendar
-local calendar = lain.widget.calendar({
+local calendar = lain.widget.cal({
     cal = "cal --color=always",
     attach_to = { clock_widget },
     notification_preset = {
@@ -353,13 +353,9 @@ local temp_widget =  wibox.container.background(wibox.container.margin(wibox.wid
 -- FS
 local fs_icon = wibox.widget.imagebox(theme.widget_hdd)
 local fs = lain.widget.fs({
-    notification_preset = { fg = theme.fg_normal, bg = theme.bg_normal, font = theme.fs_font },
-    settings = function()
-        local fsp = string.format(" %3.2f %s ", fs_now["/home"].free, fs_now["/home"].units)
-        widget:set_markup(markup.font(theme.font, markup.fg.color(theme.fg_widget, fsp)))
-    end
+    notification_preset = { fg = theme.fg_normal, bg = theme.bg_normal, font = theme.fs_font }
 })
-local fs_widget =  wibox.container.background(wibox.container.margin(wibox.widget { fs_icon, fs.widget, layout = wibox.layout.align.horizontal }, 0, 0), theme.yellow)
+theme.fs_widget =  wibox.container.background(wibox.container.margin(wibox.widget { fs_icon, fs.widget, layout = wibox.layout.align.horizontal }, 0, 0), theme.yellow)
 
 -- ALSA volume bar
 local vol_icon = wibox.widget.imagebox(theme.widget_vol)
@@ -408,7 +404,7 @@ theme.volume.bar:buttons(awful.util.table.join (
 ))
 local volumebg = wibox.container.background(theme.volume.bar, "#888888", gears.shape.rectangle)
 local vol_widget = wibox.container.margin(volumebg, 2, 7, 4, 4)
-local volume_widget = wibox.container.background(wibox.container.margin(wibox.widget { vol_icon, vol_widget, layout = wibox.layout.align.horizontal }, 0, 0), theme.blue)
+theme.volume_widget = wibox.container.background(wibox.container.margin(wibox.widget { vol_icon, vol_widget, layout = wibox.layout.align.horizontal }, 0, 0), theme.blue)
 
 -- Keyboard layout switcher
 -- kbdwidget = wibox.widget.textbox()
@@ -523,10 +519,10 @@ function theme.connect(s)
             kbd_widget,
             -- Volume
             w2,
-            volume_widget,
+            theme.volume_widget,
             -- Fs widget
             w3,
-            fs_widget,
+            theme.fs_widget,
             -- Temp
             w4,
             temp_widget,
